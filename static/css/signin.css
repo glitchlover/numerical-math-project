@@ -9,7 +9,7 @@ body {
     background-color: #f4f4f4;
 }
 
-.login-container {
+.signin-container {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -45,13 +45,15 @@ input {
     border-radius: 5px;
     box-sizing: border-box;
 }
-.flex{
- display: flex;
+
+.flex {
+    display: flex;
 }
 
-.flex img{
+.flex img {
     width: 50%;
 }
+
 button {
     background-color: #3498db;
     color: #fff;
@@ -68,9 +70,9 @@ button:hover {
 
 
 @media (max-width: 400px) {
-    input, button {
+
+    input,
+    button {
         width: 100%;
     }
 }
-
-

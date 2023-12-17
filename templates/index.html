@@ -14,6 +14,13 @@
 </head>
 
 <body>
+  <!-- {% for message in messages %}
+  <div class = "alert alert = {{message.tags}} alert-dismissible fad show" role = "alert">
+    <strong>Message</strong>{{message}}
+    <button type="button", class="close" data-dismiss="alerta" aria-label="close">
+    <span aria-hidden="true">&times;</span>
+  </div>
+  {%endfor%} -->
   <div class="navbar">
     <nav class="nav" style="margin-left: 40px;">
       <a class="nav-link active" aria-current="page" href="#">Home</a>
@@ -23,29 +30,60 @@
     <div class="dropdown">
       <img class="dropbtn" src="/static/images/cutiemodel.jpg" alt="Avatar" width="60" height="60">
       <div class="dropdown-content">
-        <a href="settings.html">Settings</a>
-        <a href="login.html">Login</a>
-        <a href="registration.html">SignIn</a>
+        <a href="settings">Settings</a>
+        {% if user.is_authenticated %}
+        <a href="signout">Sign Out</a>
+        {% else %}
+        <a href="signin">Sign In</a>
+        <a href="signup">Sign Up</a>
+        {% endif %}
+        
       </div>
       </div>
       </div>
       <section class="top">
-        <h6>Hii, Welcome to the Numerical Math Solving Platform</h6>
+        {% if user.is_authenticated %}
+        <h1>Hello {{ username }}</h1>
+        {%else%}
+        <h1>Hi,</h1>
+        {%endif%}
+        <h4>Welcome to the Numerical Math Solving Platform</h4>
     <p>This platform is designed for students who are struggling with their maths and need help <br> <span>in solving
         complex mathematical problems.</span></p>
     </section>
     <h5 style="font-size: 30px;margin-left: 70px;margin-top: 20px;">Math Solver</h5>
     <section class="card mb-3" style="max-width: 640px; margin: 20%; margin-top: 20px;background-color: #9FBB73;">
     <div id="inputSection">
-      <label for="problem" style="margin-left: 10px;margin-top: 15px;font-family: cursive;">Enter your math
-        problem:</label>
-      <input type="text" id="problem" name="problem" style="margin-left: 10px;margin-top: 6px;height: 90px; width: 600px;">
-      </div>
-    <button type="submit" class="btn btn-danger" style="width: 20%; margin-left: 200px;font-family: cursive;"
-      onclick="solveProblem()">Solve</button>
-    <div id="resultSection">
-      <p id="result"></p>
-    </div>
+      <form method="post" action="{%url 'mathsolver:home'%}">
+        {% csrf_token %}
+          {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-danger" style="width: 20%; margin-left: 200px;font-family: cursive;"">
+          Solve
+        </button>
+      </form>
+      {% if result %}
+      
+        {% if result.error %}
+          <div>{{result.error}}</div>
+          <li><strong>Input: </strong> {{ result.latex_input }}</li>
+
+        
+        {% else %}
+          <h2>Result</h2>
+          <ul>
+              <li><strong>Input:</strong> {{ result.latex_input }}</li>
+              {% if result.numerical_solution %}
+                  <li><strong>Numerical Solution:</strong> {{ result.numerical_solution }}</li>
+              {% endif %}
+              <!-- {% if result.solution_strategy %}
+                  <li>
+                      {{result.solution_strategy}}
+                  </li>
+              {% endif %} -->
+            </ul>
+        {% endif %}
+    {% endif %}
     </section>
     <section class="head">
       <h5 style="font-size: 30px;">Popular Blogs</h5>
@@ -123,32 +161,31 @@
     <p>Contact us at careers@yourcompany.com</p>
     </footer>
 
-  <!-- script -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-
-      // solve the problem
-          nction solveProblem()              const problem = docume          ementById('problem').value;
-        const result = eval(pr          
-        document.getElementByI          t').innerHTML = 'Result: ' + result;
-      }
-
-      // dropdown f         profile avatar
-      document.addEventListene        ContentLoaded', function () {
-        const dropdowns = docu          ElementsByClassName('dropdown');
-        const dropdownArray =           ototype.slice.call(dropdowns, 0);
-
-        dropdownArray.forEach(function (dropdown) {
-          dropdown.addEventListener('mouseover', function () {
-            this.getElementsByClassName('dropdown-content')[0].style.display = 'block';
-          });
-          dropdown.addEventListener('mouseout', function () {
-            this.getElementsByClassName('dropdown-content')[0].style.display = 'none';
-          });
+   <!-- script -->
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    // solve the problem
+    function solveProblem() {
+     const problem = document.getElementById('problem').value;
+     const result = eval(problem);
+     document.getElementById('result').innerHTML = 'Result: ' + result;
+    }
+    
+    // dropdown for the profile avatar
+    document.addEventListener('DOMContentLoaded', function() {
+     const dropdowns = document.getElementsByClassName('dropdown');
+     const dropdownArray = Array.prototype.slice.call(dropdowns, 0);
+    
+     dropdownArray.forEach(function(dropdown) {
+        dropdown.addEventListener('mouseover', function() {
+          this.getElementsByClassName('dropdown-content')[0].style.display = 'block';
         });
-      });
-
-    </script>
+        dropdown.addEventListener('mouseout', function() {
+          this.getElementsByClassName('dropdown-content')[0].style.display = 'none';
+        });
+     });
+    });
+    
+  </script>
 
 
 </body>
